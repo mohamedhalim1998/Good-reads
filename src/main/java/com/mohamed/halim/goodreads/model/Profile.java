@@ -1,9 +1,8 @@
 package com.mohamed.halim.goodreads.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +10,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Profile {
+@Builder(toBuilder = true)
+@Entity
+
+
+
+public class Profile implements UserDetails {
+    @Id
     private String username;
     private String fullName;
     private String password;

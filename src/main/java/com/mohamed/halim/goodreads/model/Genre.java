@@ -1,5 +1,6 @@
 package com.mohamed.halim.goodreads.model;
 
+
 public enum Genre {
     ANTIQUES_COLLECTIBLES,
     LITERARY_COLLECTIONS,

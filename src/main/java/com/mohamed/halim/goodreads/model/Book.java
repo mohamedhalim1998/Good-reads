@@ -1,22 +1,22 @@
 package com.mohamed.halim.goodreads.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Book {
+    @Id
+    private String ISBN;
     private String name;
     private String subName;
-    private List<Author> authors;
     private double avgRating;
-    private List<Review> reviews;
-    private List<Genre> genres;
-    private Series series;
+    private Long seriesId;
     private String language;
-    private String ISBN;
-    private Publisher publisher;
+    private Long publisherId;
 }
