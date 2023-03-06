@@ -19,7 +19,7 @@ class SecurityConfigurationTest {
     @Test
     public void test_allowRegister() {
         webTestClient.post().uri("/api/v1/auth/register").body(
-                Mono.just(new Registration("user1", "A@e,.com","password")), Registration.class
+                Mono.just(new Registration("user1", "A@e.com","password")), Registration.class
         ).exchange().expectStatus().isOk();
     }
 

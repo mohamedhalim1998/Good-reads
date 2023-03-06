@@ -4,6 +4,7 @@ import com.mohamed.halim.goodreads.model.dto.AuthResponse;
 import com.mohamed.halim.goodreads.model.dto.Login;
 import com.mohamed.halim.goodreads.model.dto.Registration;
 import com.mohamed.halim.goodreads.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,12 @@ public class AuthController {
     private final ProfileService profileService;
 
     @PostMapping("register")
-    public Mono<AuthResponse> register(@RequestBody Registration registration) {
+    public Mono<AuthResponse> register(@RequestBody @Valid Registration registration) {
         return profileService.registerUser(registration);
     }
 
     @PostMapping("login")
-    public Mono<AuthResponse> login(@RequestBody Login login) {
+    public Mono<AuthResponse> login(@RequestBody @Valid Login login) {
         return profileService.login(login);
     }
 }
