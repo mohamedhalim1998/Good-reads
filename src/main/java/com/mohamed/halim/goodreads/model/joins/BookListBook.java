@@ -1,6 +1,9 @@
-package com.mohamed.halim.goodreads.model;
+package com.mohamed.halim.goodreads.model.joins;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookGenre {
+public class BookListBook {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    private Long listId;
     private String bookId;
-    @Enumerated(EnumType.STRING)
-    private Genre genre;
+
 }

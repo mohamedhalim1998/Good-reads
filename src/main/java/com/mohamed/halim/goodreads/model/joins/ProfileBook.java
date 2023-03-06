@@ -1,4 +1,4 @@
-package com.mohamed.halim.goodreads.model;
+package com.mohamed.halim.goodreads.model.joins;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookListBook {
+public class ProfileBook {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Long listId;
+    private String userId;
     private String bookId;
-
 }

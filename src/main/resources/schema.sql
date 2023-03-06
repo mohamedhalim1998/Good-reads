@@ -11,7 +11,7 @@ create sequence series_seq start with 1 increment by 50;
 create sequence shelf_book_seq start with 1 increment by 50;
 create sequence shelf_seq start with 1 increment by 50;
 create sequence social_media_seq start with 1 increment by 50;
-create sequence user_book_seq start with 1 increment by 50;
+create sequence profile_book_seq start with 1 increment by 50;
 create table author (id bigint not null, bio varchar(255), birthdate timestamp(6), name varchar(255), website varchar(255), primary key (id));
 create table book (isbn varchar(255) not null, avg_rating float(53) not null, language varchar(255), name varchar(255), publisher_id bigint, series_id bigint, sub_name varchar(255), primary key (isbn));
 create table book_author (id bigint not null, author_id bigint, book_id varchar(255), primary key (id));
@@ -28,7 +28,7 @@ create table series_book (id bigint not null, book_id varchar(255), series_id bi
 create table shelf (id bigint not null, name varchar(255), user_id varchar(255), primary key (id));
 create table shelf_book (id bigint not null, book_id varchar(255), shelf_id bigint, primary key (id));
 create table social_media (id bigint not null, author_id bigint, type varchar(255), url varchar(255), primary key (id));
-create table user_book (id bigint not null, book_id varchar(255), user_id varchar(255), primary key (id));
+create table profile_book (id bigint not null, book_id varchar(255), user_id varchar(255), primary key (id));
 alter table if exists book_list_books add constraint UK_3mmccoucmko6js9o5rk0w8u62 unique (books_isbn);
 alter table if exists book_list_books add constraint FKd3rxnajj0jy4seq80r50jxm21 foreign key (books_isbn) references book;
 alter table if exists book_list_books add constraint FKrvngy70adfj92axq5s40sps3g foreign key (book_list_id) references book_list;

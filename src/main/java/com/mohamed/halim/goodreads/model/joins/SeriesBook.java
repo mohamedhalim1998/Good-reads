@@ -1,4 +1,4 @@
-package com.mohamed.halim.goodreads.model;
+package com.mohamed.halim.goodreads.model.joins;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
