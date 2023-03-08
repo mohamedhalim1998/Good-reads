@@ -1,18 +1,19 @@
-package com.mohamed.halim.goodreads.model.joins;
+package com.mohamed.halim.goodreads.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class BookList {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
 }
