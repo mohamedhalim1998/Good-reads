@@ -41,7 +41,7 @@ class ReviewServiceTest {
         Mockito.when(reviewRepository.save(any())).thenReturn(Mono.just(review));
         Mockito.when(bookRepository.findByISBN(any())).thenReturn(Mono.just(book));
         Mockito.when(profileRepository.findByUsername(any())).thenReturn(Mono.just(profile));
-        Mono<ReviewDto> mono = reviewService.saveBookReview(dto, "user1").doOnNext(reviewDto -> {
+        Mono<ReviewDto> mono = reviewService.saveBookReview(dto).doOnNext(reviewDto -> {
             dto.setId(reviewDto.getId());
         });
         StepVerifier.create(mono).expectNextMatches(dto::equals).verifyComplete();

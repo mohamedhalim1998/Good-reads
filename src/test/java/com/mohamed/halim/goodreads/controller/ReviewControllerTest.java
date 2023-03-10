@@ -32,12 +32,12 @@ class ReviewControllerTest {
 
 
     @Test
-    public void test_postReview() {
+    public void test_postReviewToUser() {
         Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
         Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
         Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
         ReviewDto dto = ReviewDto.fromReview(review, profile, book);
-        Mockito.when(reviewService.saveBookReview(any(), any())).thenReturn(Mono.just(dto));
+        Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
         webTestClient.post().uri("/api/v1/user1/reviews")
                 .body(Mono.just(dto), ReviewDto.class)
                 .exchange()
@@ -51,5 +51,47 @@ class ReviewControllerTest {
                 .jsonPath("$.comment").isEqualTo(review.getComment())
                 .jsonPath("$.rate").isEqualTo(review.getRate());
     }
+    @Test
+    public void test_postReviewToBook() {
+        Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
+        Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        ReviewDto dto = ReviewDto.fromReview(review, profile, book);
+        Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
+        webTestClient.post().uri("/api/v1/9780345296061/reviews")
+                .body(Mono.just(dto), ReviewDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").isNotEmpty()
+                .jsonPath("$.username").doesNotExist()
+                .jsonPath("$.bookId").doesNotExist()
+                .jsonPath("$.profile.username").isEqualTo(review.getUserId())
+                .jsonPath("$.book.name").isEqualTo(book.getName())
+                .jsonPath("$.comment").isEqualTo(review.getComment())
+                .jsonPath("$.rate").isEqualTo(review.getRate());
+    }
+    @Test
+    public void test_postReview() {
+        Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
+        Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        ReviewDto dto = ReviewDto.fromReview(review, profile, book);
+        Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
+        webTestClient.post().uri("/api/v1/reviews")
+                .body(Mono.just(dto), ReviewDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").isNotEmpty()
+                .jsonPath("$.username").doesNotExist()
+                .jsonPath("$.bookId").doesNotExist()
+                .jsonPath("$.profile.username").isEqualTo(review.getUserId())
+                .jsonPath("$.book.name").isEqualTo(book.getName())
+                .jsonPath("$.comment").isEqualTo(review.getComment())
+                .jsonPath("$.rate").isEqualTo(review.getRate());
+    }
+
+
 
 }

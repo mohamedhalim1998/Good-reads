@@ -47,6 +47,8 @@ public class ReviewDto {
 
     public static Review toReview(ReviewDto review) {
         return Review.builder()
+                .userId(review.username)
+                .bookId(review.bookId)
                 .comment(review.getComment())
                 .rate(review.getRate())
                 .bookId(review.getBookId())

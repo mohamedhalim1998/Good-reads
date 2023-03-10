@@ -14,10 +14,11 @@ import reactor.core.publisher.Mono;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("/{username}/reviews")
+    @PostMapping({"/{username}/reviews", "/{book}/reviews", "reviews"})
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReviewDto> postReview(@RequestBody ReviewDto reviewDto, @PathVariable("username") String username) {
-        return reviewService.saveBookReview(reviewDto, username);
+    public Mono<ReviewDto> postReviewToUser(@RequestBody ReviewDto reviewDto) {
+        return reviewService.saveBookReview(reviewDto);
     }
+
 
 }
