@@ -17,13 +17,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-
 
 @SpringBootTest(classes = SecurityConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class ReviewControllerTest {
+class ProfileControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
@@ -31,16 +31,14 @@ class ReviewControllerTest {
     private ReviewService reviewService;
 
     @Test
-    public void test_postReview() {
+    public void test_postReviewToUser() {
         Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
         Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
         Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
         ReviewDto dto = ReviewDto.fromReview(review, profile, book);
-        dto.setUsername(profile.getUsername());
-        dto.setBookId(book.getISBN());
         Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
-        webTestClient.post().uri("/api/v1/reviews")
-                .body(Mono.just(dto), ReviewDto.class)
+        webTestClient.post().uri("/api/v1/profiles/user1/reviews")
+                .body(Mono.just(dto), Review.class)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
@@ -53,21 +51,8 @@ class ReviewControllerTest {
                 .jsonPath("$.rate").isEqualTo(review.getRate());
     }
 
-     @Test
-    public void test_postReviewNoBookId() {
-        Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
-        Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
-        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
-        ReviewDto dto = ReviewDto.fromReview(review, profile, book);
-        Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
-        webTestClient.post().uri("/api/v1/reviews")
-                .body(Mono.just(dto), ReviewDto.class)
-                .exchange()
-                .expectStatus().is4xxClientError();
-
-    }
     @Test
-    public void test_postReviewNoUser() {
+    public void test_postReviewToUserNoBookId() {
         Review review = Review.builder().id(1L).userId("user1").bookId("9780345296061").rate(4.0).comment("this a review from user1").build();
         Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
         Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
@@ -78,7 +63,4 @@ class ReviewControllerTest {
                 .exchange()
                 .expectStatus().is4xxClientError();
     }
-
-
-
 }

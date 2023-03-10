@@ -4,6 +4,7 @@ import com.mohamed.halim.goodreads.Exception.UserNotFoundException;
 import com.mohamed.halim.goodreads.model.dto.AuthResponse;
 import com.mohamed.halim.goodreads.model.dto.Login;
 import com.mohamed.halim.goodreads.model.dto.Registration;
+import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.security.JwtService;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ReviewService reviewService;
 
     public Mono<AuthResponse> registerUser(Registration registration) {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
@@ -39,4 +41,8 @@ public class ProfileService {
         }).switchIfEmpty(Mono.error(new UserNotFoundException()));
     }
 
+    public Mono<ReviewDto> saveBookReview(ReviewDto reviewDto, String username) {
+        reviewDto.setUsername(username);
+        return reviewService.saveBookReview(reviewDto);
+    }
 }

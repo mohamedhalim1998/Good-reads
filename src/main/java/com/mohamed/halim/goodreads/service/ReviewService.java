@@ -8,6 +8,7 @@ import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.repository.BookRepository;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.repository.ReviewRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ReviewService {
     private BookRepository bookRepository;
     private ProfileRepository profileRepository;
 
-    public Mono<ReviewDto> saveBookReview(ReviewDto reviewDto) {
+    public Mono<ReviewDto> saveBookReview(@Valid ReviewDto reviewDto) {
         Review review = ReviewDto.toReview(reviewDto);
         return reviewRepository.save(review).map(ReviewDto::fromReview)
                 .zipWith(profileRepository.findByUsername(reviewDto.getUsername()))
