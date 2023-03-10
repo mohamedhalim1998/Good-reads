@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @AllArgsConstructor
@@ -44,5 +45,9 @@ public class ProfileService {
     public Mono<ReviewDto> saveBookReview(ReviewDto reviewDto, String username) {
         reviewDto.setUsername(username);
         return reviewService.saveBookReview(reviewDto);
+    }
+
+    public Flux<ReviewDto> getReviews(String username, int page) {
+        return reviewService.findUserReviews(username, page);
     }
 }

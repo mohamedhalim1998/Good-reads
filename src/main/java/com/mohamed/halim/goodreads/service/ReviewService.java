@@ -55,4 +55,16 @@ public class ReviewService {
                 });
 
     }
+
+    public Flux<ReviewDto> findUserReviews(String username, int page) {
+        Flux<Review> reviewFlux = reviewRepository.findReviewsByUserId(username, PageRequest.of(1, 20)).doOnError(e -> log.error("error from review flux"));
+        Flux<Book> bookFlux = reviewFlux.flatMap(review -> bookRepository.findByISBN(review.getBookId())).doOnError(e -> log.error(e.getMessage() + "error from book flux"));
+        return Flux.zip(reviewFlux, bookFlux, (review, book) -> {
+            ReviewDto reviewDto = ReviewDto.fromReview(review);
+            reviewDto.setBookDto(BookDto.fromBook(book));
+            return reviewDto;
+        });
+    }
+
+
 }
