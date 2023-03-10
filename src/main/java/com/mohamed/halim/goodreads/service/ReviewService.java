@@ -1,6 +1,8 @@
 package com.mohamed.halim.goodreads.service;
 
 
+import com.mohamed.halim.goodreads.model.Book;
+import com.mohamed.halim.goodreads.model.Profile;
 import com.mohamed.halim.goodreads.model.Review;
 import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ProfileDto;
@@ -8,20 +10,37 @@ import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.repository.BookRepository;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.repository.ReviewRepository;
-import jakarta.validation.Valid;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ReviewService {
     private ReviewRepository reviewRepository;
     private BookRepository bookRepository;
     private ProfileRepository profileRepository;
+    private Validator validator;
 
-    public Mono<ReviewDto> saveBookReview(@Valid ReviewDto reviewDto) {
+    public Mono<ReviewDto> saveBookReview(ReviewDto reviewDto) {
+        Set<ConstraintViolation<ReviewDto>> violations = validator.validate(reviewDto);
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (var constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+           return  Mono.error(new ConstraintViolationException("Error occurred: " + sb, violations));
+        }
+
         Review review = ReviewDto.toReview(reviewDto);
         return reviewRepository.save(review).map(ReviewDto::fromReview)
                 .zipWith(profileRepository.findByUsername(reviewDto.getUsername()))
