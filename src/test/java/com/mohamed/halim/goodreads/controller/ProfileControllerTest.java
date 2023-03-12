@@ -10,22 +10,27 @@ import com.mohamed.halim.goodreads.model.dto.ProfileDto;
 import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.security.SecurityConfiguration;
 import com.mohamed.halim.goodreads.service.ProfileService;
-import com.mohamed.halim.goodreads.service.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -63,6 +68,7 @@ class ProfileControllerTest {
                 .jsonPath("$.comment").isEqualTo(review.getComment())
                 .jsonPath("$.rate").isEqualTo(review.getRate());
     }
+
     @Test
     public void test_getUserReviews() throws JsonProcessingException {
         List<Review> reviews = IntStream.range(0, 20).mapToObj(i -> Review.builder().id((long) i).userId("user1").bookId("" + i).rate(4.0).comment("this a review from user1").build()).collect(Collectors.toList());
@@ -92,6 +98,31 @@ class ProfileControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .json(new ObjectMapper().writeValueAsString(profileDto));
+    }
+
+    @Test
+    public void test_postUserWithImage() throws IOException {
+        String uuid = UUID.randomUUID().toString();
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        ProfileDto profileDto = ProfileDto.fromProfile(profile);
+        MultipartBodyBuilder multipartBodyBuilder = new MultipartBodyBuilder();
+        File file = new File("image.jpg");
+        file.createNewFile();
+        String header1 = String.format("form-data; name=%s; filename=%s", "attach", file.getName());
+        multipartBodyBuilder.part("profilePic", new ByteArrayResource(Files.readAllBytes(file.toPath()))).header("Content-Disposition", header1);
+        multipartBodyBuilder.part("profile", new ObjectMapper().writeValueAsString(profileDto)).contentType(MediaType.APPLICATION_JSON);
+        profile.setProfilePic(uuid);
+        profileDto = ProfileDto.fromProfile(profile);
+        Mockito.when(profileService.saveProfileInfo(anyString(), any(), any())).thenReturn(Mono.just(ProfileDto.fromProfile(profile)));
+        webTestClient.post().uri("/api/v1/profiles/user1")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .json(new ObjectMapper().writeValueAsString(profileDto));
+
     }
 
 

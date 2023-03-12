@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# res folder
+/img/
+/image.jpg

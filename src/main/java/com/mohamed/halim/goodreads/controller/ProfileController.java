@@ -6,8 +6,11 @@ import com.mohamed.halim.goodreads.service.ProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
@@ -33,6 +36,12 @@ public class ProfileController {
         return profileService.getProfile(username);
     }
 
+    @PostMapping(value = "/{username}")
+    public Mono<ProfileDto> postProfileInfo(@PathVariable String username,
+                                            @RequestPart("profile") ProfileDto dto,
+                                            @RequestPart(value = "profilePic", required = false) MultipartFile profilePic) throws IOException {
+        return profileService.saveProfileInfo(username, dto, profilePic);
+    }
 
 
 }

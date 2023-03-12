@@ -1,18 +1,18 @@
 package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.Exception.UserNotFoundException;
-import com.mohamed.halim.goodreads.model.dto.AuthResponse;
-import com.mohamed.halim.goodreads.model.dto.Login;
-import com.mohamed.halim.goodreads.model.dto.Registration;
-import com.mohamed.halim.goodreads.model.dto.ReviewDto;
+import com.mohamed.halim.goodreads.model.dto.*;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.security.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @AllArgsConstructor
 @Slf4j
@@ -22,6 +22,7 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ReviewService reviewService;
+    private final ImageService imageService;
 
     public Mono<AuthResponse> registerUser(Registration registration) {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
@@ -49,5 +50,25 @@ public class ProfileService {
 
     public Flux<ReviewDto> getReviews(String username, int page) {
         return reviewService.findUserReviews(username, page);
+    }
+
+    public Mono<ProfileDto> getProfile(String username) {
+        return profileRepository.findByUsername(username).map(ProfileDto::fromProfile);
+    }
+
+
+    public Mono<ProfileDto> saveProfileInfo(String username, ProfileDto dto, MultipartFile profilePic) throws IOException {
+
+        return profileRepository.findByUsername(username).flatMap(profile -> {
+            profile = ProfileDto.updateProfileFromDto(profile, dto);
+            if (profilePic != null) {
+                try {
+                    profile.setProfilePic(imageService.saveImage(profilePic));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return profileRepository.save(profile);
+        }).map(ProfileDto::fromProfile);
     }
 }

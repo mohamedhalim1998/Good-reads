@@ -3,10 +3,7 @@ package com.mohamed.halim.goodreads.service;
 import com.mohamed.halim.goodreads.model.Book;
 import com.mohamed.halim.goodreads.model.Profile;
 import com.mohamed.halim.goodreads.model.Review;
-import com.mohamed.halim.goodreads.model.dto.AuthResponse;
-import com.mohamed.halim.goodreads.model.dto.Login;
-import com.mohamed.halim.goodreads.model.dto.Registration;
-import com.mohamed.halim.goodreads.model.dto.ReviewDto;
+import com.mohamed.halim.goodreads.model.dto.*;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.security.JwtService;
 import org.junit.jupiter.api.Test;
@@ -15,20 +12,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProfileServiceTest {
     @Mock
     private ProfileRepository profileRepository;
@@ -38,6 +39,8 @@ class ProfileServiceTest {
     private JwtService jwtService;
     @Mock
     private ReviewService reviewService;
+    @Mock
+    private ImageService imageService;
     @InjectMocks
     private ProfileService profileService;
 
@@ -110,8 +113,37 @@ class ProfileServiceTest {
         Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
         List<ReviewDto> dtos = IntStream.range(0, 20).mapToObj(i -> ReviewDto.fromReview(reviews.get(i), profile, books.get(i))).collect(Collectors.toList());
         Mockito.when(reviewService.findUserReviews(any(), anyInt())).thenReturn(Flux.fromIterable(dtos));
-        StepVerifier.create(profileService.findUserReviews("user1", 0));
+        StepVerifier.create(profileService.getReviews("user1", 0));
 
+    }
+
+    @Test
+    public void test_getUserByUsername() {
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        Mockito.when(profileRepository.findByUsername(anyString())).thenReturn(Mono.just(profile));
+        ProfileDto profileDto = ProfileDto.fromProfile(profile);
+        Mono<ProfileDto> mono = profileService.getProfile("user1");
+        StepVerifier.create(mono).expectNextMatches(profileDto::equals).verifyComplete();
+    }
+
+    @Test
+    public void test_getUserByUsernameNotFound() {
+        Mockito.when(profileRepository.findByUsername(anyString())).thenReturn(Mono.empty());
+        Mono<ProfileDto> mono = profileService.getProfile("user1");
+        StepVerifier.create(mono).verifyComplete();
+    }
+
+    @Test
+    public void test_postUserInfo() throws IOException {
+        String uuid = UUID.randomUUID().toString();
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        MockMultipartFile file = new MockMultipartFile("testImage.jpg", new byte[200000]);
+        Mockito.when(profileRepository.findByUsername(anyString())).thenReturn(Mono.just(profile));
+        Mockito.when(imageService.saveImage(any())).thenReturn(uuid);
+        Mockito.when(profileRepository.save(any())).thenReturn(Mono.just(profile));
+        Mono<ProfileDto> mono = profileService.saveProfileInfo("user1", ProfileDto.fromProfile(profile), file);
+        profile.setProfilePic(uuid);
+        StepVerifier.create(mono).expectNextMatches(ProfileDto.fromProfile(profile)::equals).verifyComplete();
     }
 
 }
