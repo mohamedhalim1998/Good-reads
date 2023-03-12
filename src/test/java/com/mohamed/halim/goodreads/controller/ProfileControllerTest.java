@@ -6,11 +6,14 @@ import com.mohamed.halim.goodreads.model.Book;
 import com.mohamed.halim.goodreads.model.Profile;
 import com.mohamed.halim.goodreads.model.Review;
 import com.mohamed.halim.goodreads.model.dto.BookDto;
+import com.mohamed.halim.goodreads.model.dto.ProfileDto;
 import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.security.SecurityConfiguration;
+import com.mohamed.halim.goodreads.service.ProfileService;
 import com.mohamed.halim.goodreads.service.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,13 +35,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(classes = SecurityConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProfileControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
     @MockBean
-    private ReviewService reviewService;
+    private ProfileService profileService;
 
     @Test
     public void test_postReviewToUser() {
@@ -46,7 +49,7 @@ class ProfileControllerTest {
         Book book = Book.builder().name("THe Lord Of The Rings").ISBN("9780345296061").build();
         Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
         ReviewDto dto = ReviewDto.fromReview(review, profile, book);
-        Mockito.when(reviewService.saveBookReview(any())).thenReturn(Mono.just(dto));
+        Mockito.when(profileService.saveBookReview(any(), anyString())).thenReturn(Mono.just(dto));
         webTestClient.post().uri("/api/v1/profiles/user1/reviews")
                 .body(Mono.just(dto), Review.class)
                 .exchange()
@@ -69,13 +72,26 @@ class ProfileControllerTest {
             reviewDto.setBookDto(BookDto.fromBook(books.get(i)));
             return reviewDto;
         }).toList();
-
-        Mockito.when(reviewService.findUserReviews(any(), anyInt())).thenReturn(Flux.fromIterable(dtos));
+        Mockito.when(profileService.getReviews(any(), anyInt())).thenReturn(Flux.fromIterable(dtos));
         webTestClient.get().uri("/api/v1/profiles/user1/reviews")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .json(new ObjectMapper().writeValueAsString(dtos));
+    }
+
+
+    @Test
+    public void test_getUserInfo() throws JsonProcessingException {
+        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
+        ProfileDto profileDto = ProfileDto.fromProfile(profile);
+        Mockito.when(profileService.getProfile(anyString())).thenReturn(Mono.just(profileDto));
+        System.out.println(profileDto);
+        webTestClient.get().uri("/api/v1/profiles/user1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .json(new ObjectMapper().writeValueAsString(profileDto));
     }
 
 
