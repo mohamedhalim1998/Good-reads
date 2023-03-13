@@ -2,6 +2,8 @@ package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.Exception.UserNotFoundException;
 import com.mohamed.halim.goodreads.model.dto.*;
+import com.mohamed.halim.goodreads.model.joins.ProfileBook;
+import com.mohamed.halim.goodreads.model.joins.ProfileBookList;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.security.JwtService;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,8 @@ public class ProfileService {
     private final JwtService jwtService;
     private final ReviewService reviewService;
     private final ImageService imageService;
+    private final BookService bookService;
+    private final BookListService bookListService;
 
     public Mono<AuthResponse> registerUser(Registration registration) {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
@@ -70,5 +74,21 @@ public class ProfileService {
             }
             return profileRepository.save(profile);
         }).map(ProfileDto::fromProfile);
+    }
+
+    public Flux<BookDto> getBooks(String username, int page) {
+        return bookService.getBooksByUsername(username, page);
+    }
+
+    public Mono<ProfileBook> addBook(String username, ProfileBook profileBook) {
+        return bookService.saveBookToUser(username, profileBook);
+    }
+
+    public Flux<ListDto> getLists(String username, int page) {
+        return bookListService.getProfileLists(username, page);
+    }
+
+    public Mono<ProfileBookList> addList(String username, ProfileBookList profileBookList) {
+        return bookListService.addProfileList(username, profileBookList);
     }
 }

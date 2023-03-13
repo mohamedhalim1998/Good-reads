@@ -2,6 +2,8 @@ package com.mohamed.halim.goodreads.controller;
 
 
 import com.mohamed.halim.goodreads.model.dto.*;
+import com.mohamed.halim.goodreads.model.joins.ProfileBook;
+import com.mohamed.halim.goodreads.model.joins.ProfileBookList;
 import com.mohamed.halim.goodreads.service.ProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,12 @@ public class ProfileController {
                                             @RequestPart(value = "profilePic", required = false) MultipartFile profilePic) throws IOException {
         return profileService.saveProfileInfo(username, dto, profilePic);
     }
+
+    @GetMapping("/{username}/books")
+    public Flux<BookDto> getProfileBooks(@PathVariable String username,  @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+        return profileService.getBooks(username, page);
+    }
+
 
 
 }
