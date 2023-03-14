@@ -36,10 +36,10 @@ public class ProfileDto {
                 .username(profile.getUsername())
                 .fullName(profile.getFullName())
                 .profilePic(hostname  + "/img/" + profile.getProfilePic())
-                .reviews(hostname + "/" + profile.getUsername() + "/reviews")
-                .books(hostname + "/" + profile.getUsername() + "/books")
-                .lists(hostname + "/" + profile.getUsername() + "/lists")
-                .shelves(hostname + "/" + profile.getUsername() + "/shelves")
+                .reviews(hostname + "profiles/" + profile.getUsername() + "/reviews")
+                .books(hostname + "profiles/" + profile.getUsername() + "/books")
+                .lists(hostname + "profiles/" + profile.getUsername() + "/lists")
+                .shelves(hostname + "profiles/" + profile.getUsername() + "/shelves")
                 .build();
     }
 
