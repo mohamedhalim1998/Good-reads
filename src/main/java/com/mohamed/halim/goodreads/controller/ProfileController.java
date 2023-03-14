@@ -4,6 +4,7 @@ package com.mohamed.halim.goodreads.controller;
 import com.mohamed.halim.goodreads.model.dto.*;
 import com.mohamed.halim.goodreads.model.joins.ProfileBook;
 import com.mohamed.halim.goodreads.model.joins.ProfileBookList;
+import com.mohamed.halim.goodreads.model.joins.ShelfBook;
 import com.mohamed.halim.goodreads.service.ProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -99,9 +100,16 @@ public class ProfileController {
     }
 
     @GetMapping("/{username}/shelves/{shelfId}/books")
-    public Flux<BookDto> getProfileShelves(@PathVariable String username,
+    public Flux<BookDto> getProfileShelfBooks(@PathVariable String username,
                                            @PathVariable Long shelfId,
                                            @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return profileService.getShelfBooks(shelfId, page);
     }
+
+    @PostMapping("/{username}/shelves/{shelfId}/books")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<ShelfBook> postProfileShelfBooks(@RequestBody ShelfBook shelfBook) {
+        return profileService.saveBookToShelf(shelfBook);
+    }
+
 }

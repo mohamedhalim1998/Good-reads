@@ -4,6 +4,7 @@ import com.mohamed.halim.goodreads.Exception.UserNotFoundException;
 import com.mohamed.halim.goodreads.model.dto.*;
 import com.mohamed.halim.goodreads.model.joins.ProfileBook;
 import com.mohamed.halim.goodreads.model.joins.ProfileBookList;
+import com.mohamed.halim.goodreads.model.joins.ShelfBook;
 import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.security.JwtService;
 import lombok.AllArgsConstructor;
@@ -123,5 +124,9 @@ public class ProfileService {
 
     public Flux<BookDto> getShelfBooks(Long shelfId, int page) {
         return shelfService.getShelfBooks(shelfId, page);
+    }
+
+    public Mono<ShelfBook> saveBookToShelf(ShelfBook shelfBook) {
+        return shelfService.saveBookToShelf(shelfBook);
     }
 }

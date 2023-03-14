@@ -3,6 +3,7 @@ package com.mohamed.halim.goodreads.service;
 import com.mohamed.halim.goodreads.model.Shelf;
 import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ShelfDto;
+import com.mohamed.halim.goodreads.model.joins.ShelfBook;
 import com.mohamed.halim.goodreads.repository.ShelfBookRepository;
 import com.mohamed.halim.goodreads.repository.ShelfRepository;
 import lombok.AllArgsConstructor;
@@ -50,5 +51,9 @@ public class ShelfService {
         return shelfBookRepository.findByShelfId(shelfId, PageRequest.of(page, PAGE_SIZE)).flatMap(
                 shelfBook -> bookService.getBook(shelfBook.getBookId())
         );
+    }
+
+    public Mono<ShelfBook> saveBookToShelf(ShelfBook shelfBook) {
+        return shelfBookRepository.save(shelfBook);
     }
 }
