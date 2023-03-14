@@ -2,6 +2,7 @@ package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ReviewDto;
+import com.mohamed.halim.goodreads.model.joins.ProfileBook;
 import com.mohamed.halim.goodreads.repository.BookRepository;
 import com.mohamed.halim.goodreads.repository.ProfileBookRepository;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,10 @@ public class BookService {
                 .flatMap(profileBook -> bookRepository.findByISBN(profileBook.getBookId()))
                 .map(BookDto::fromBook);
 
+    }
+
+    public Mono<ProfileBook> saveBookToUser(String username, ProfileBook profileBook) {
+        profileBook.setUserId(username);
+        return profileBookRepository.save(profileBook);
     }
 }

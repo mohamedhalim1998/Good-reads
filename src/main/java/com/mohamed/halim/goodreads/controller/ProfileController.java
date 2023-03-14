@@ -50,6 +50,11 @@ public class ProfileController {
         return profileService.getBooks(username, page);
     }
 
+    @PostMapping("/{username}/books")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<ProfileBook> postProfileBook(@PathVariable String username, @RequestBody ProfileBook profileBook) {
+        return profileService.addBook(username, profileBook);
+    }
 
 
 }
