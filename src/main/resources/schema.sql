@@ -6,6 +6,7 @@ create table book_list (id bigint auto_increment not null, name varchar(255), pr
 create table book_list_book (id bigint auto_increment not null, book_id varchar(255), list_id bigint, primary key (id));
 create table profile (username varchar(255) not null, birthdate timestamp(6), email varchar(255), full_name varchar(255), password varchar(255), profile_pic varchar(255), primary key (username));
 create table profile_book (id bigint auto_increment not null, book_id varchar(255), user_id varchar(255), primary key (id));
+create table profile_book_list (id bigint auto_increment not null, list_id varchar(255), user_id varchar(255), primary key (id));
 create table publisher (id bigint auto_increment not null, name varchar(255), primary key (id));
 create table publisher_book (id bigint auto_increment not null, book_id varchar(255), publisher_id bigint, primary key (id));
 create table review (id bigint auto_increment not null, book_id varchar(255), comment varchar(255), rate float(53) not null, user_id varchar(255), primary key (id));

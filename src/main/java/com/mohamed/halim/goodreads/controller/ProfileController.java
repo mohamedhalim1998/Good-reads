@@ -49,12 +49,20 @@ public class ProfileController {
     public Flux<BookDto> getProfileBooks(@PathVariable String username,  @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return profileService.getBooks(username, page);
     }
-
     @PostMapping("/{username}/books")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ProfileBook> postProfileBook(@PathVariable String username, @RequestBody ProfileBook profileBook) {
         return profileService.addBook(username, profileBook);
     }
+    @GetMapping("/{username}/list")
+    public Flux<ListDto> getProfileLists(@PathVariable String username,  @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+        return profileService.getLists(username, page);
+    }
 
+    @PostMapping("/{username}/list")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<ProfileBookList> postProfileList(@PathVariable String username, @RequestBody ProfileBookList profileBookList) {
+        return profileService.addList(username, profileBookList);
+    }
 
 }

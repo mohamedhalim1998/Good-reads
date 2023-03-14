@@ -10,10 +10,9 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookListBook {
+public class ProfileBookList {
     @Id
     private Long id;
     private Long listId;
-    private String bookId;
-
+    private String userId;
 }
