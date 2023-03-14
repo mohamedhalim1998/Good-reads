@@ -27,8 +27,8 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS)
-                .permitAll()
+                .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .pathMatchers(HttpMethod.GET).permitAll()
                 .pathMatchers("/api/v1/auth/**").permitAll()
                 .pathMatchers("/h2-console**").permitAll()
                 .anyExchange().authenticated()
