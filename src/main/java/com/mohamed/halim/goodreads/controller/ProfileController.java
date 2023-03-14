@@ -65,4 +65,15 @@ public class ProfileController {
         return profileService.addList(username, profileBookList);
     }
 
+    @GetMapping("/{username}/shelf")
+    public Flux<ShelfDto> getProfileShelves(@PathVariable String username, @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+        return profileService.getShelves(username, page);
+    }
+
+    @PostMapping("/{username}/shelf")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<ShelfDto> postProfileShelves(@PathVariable String username, @RequestBody ShelfDto shelfDto) {
+        return profileService.addShelf(username, shelfDto);
+    }
+
 }

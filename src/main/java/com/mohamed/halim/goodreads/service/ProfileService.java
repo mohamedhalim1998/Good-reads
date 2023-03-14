@@ -27,6 +27,7 @@ public class ProfileService {
     private final ImageService imageService;
     private final BookService bookService;
     private final BookListService bookListService;
+    private final ShelfService shelfService;
 
     public Mono<AuthResponse> registerUser(Registration registration) {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
@@ -90,5 +91,13 @@ public class ProfileService {
 
     public Mono<ProfileBookList> addList(String username, ProfileBookList profileBookList) {
         return bookListService.addProfileList(username, profileBookList);
+    }
+
+    public Flux<ShelfDto> getShelves(String username, int page) {
+        return shelfService.getProfileShelves(username, page);
+    }
+
+    public Mono<ShelfDto> addShelf(String username, ShelfDto profileShelf) {
+        return shelfService.saveProfileShelf(username, profileShelf);
     }
 }
