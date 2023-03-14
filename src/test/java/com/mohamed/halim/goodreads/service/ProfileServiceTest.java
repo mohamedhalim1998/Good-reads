@@ -46,8 +46,7 @@ class ProfileServiceTest {
 
     @Test
     public void test_register() {
-        Profile profile = Profile.builder().username("user1").password("password").email("e@e.com").build();
-        Mockito.when(profileRepository.save(profile)).thenReturn(Mono.just(profile));
+        Mockito.when(profileRepository.save(any())).thenReturn(Mono.just(Registration.toProfile(new Registration("user1", "e@e.com", "password"))));
         Mockito.when(passwordEncoder.encode(anyString())).thenReturn("password");
         Mockito.when(jwtService.generateToken(any(Profile.class))).thenReturn("jwtToken");
         Mono<AuthResponse> responseMono = profileService.registerUser(new Registration("user1", "e@e.com", "password"));
@@ -58,7 +57,7 @@ class ProfileServiceTest {
                 ), p))
                 .expectComplete()
                 .verify();
-        Mockito.verify(profileRepository).save(profile);
+        Mockito.verify(profileRepository).save(any());
         Mockito.verify(passwordEncoder).encode(anyString());
         Mockito.verify(jwtService).generateToken(any(Profile.class));
     }

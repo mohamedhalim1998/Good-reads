@@ -32,7 +32,7 @@ class SecurityConfigurationTest {
 
     @Test
     public void test_checkJwtForAnyOther() {
-        webTestClient.get().uri("/api/v1/test").exchange().expectStatus().isUnauthorized();
+        webTestClient.post().uri("/api/v1/test").exchange().expectStatus().isUnauthorized();
     }
 
 }
