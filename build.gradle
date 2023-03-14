@@ -42,7 +42,8 @@ dependencies {
 
 	// guav utlis
 	implementation 'com.google.guava:guava:31.1-jre'
-
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.3'
 
 }
 
