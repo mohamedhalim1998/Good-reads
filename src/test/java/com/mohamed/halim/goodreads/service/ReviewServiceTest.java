@@ -11,6 +11,7 @@ import com.mohamed.halim.goodreads.repository.ProfileRepository;
 import com.mohamed.halim.goodreads.repository.ReviewRepository;
 import com.mohamed.halim.goodreads.security.SecurityConfiguration;
 import jakarta.validation.Validator;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 @SpringBootTest(classes = SecurityConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Order(1)
 class ReviewServiceTest {
     @MockBean
     private ReviewRepository reviewRepository;

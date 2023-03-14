@@ -54,23 +54,23 @@ public class ProfileController {
     public Mono<ProfileBook> postProfileBook(@PathVariable String username, @RequestBody ProfileBook profileBook) {
         return profileService.addBook(username, profileBook);
     }
-    @GetMapping("/{username}/list")
+    @GetMapping("/{username}/lists")
     public Flux<ListDto> getProfileLists(@PathVariable String username,  @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return profileService.getLists(username, page);
     }
 
-    @PostMapping("/{username}/list")
+    @PostMapping("/{username}/lists")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ProfileBookList> postProfileList(@PathVariable String username, @RequestBody ProfileBookList profileBookList) {
         return profileService.addList(username, profileBookList);
     }
 
-    @GetMapping("/{username}/shelf")
+    @GetMapping("/{username}/shelves")
     public Flux<ShelfDto> getProfileShelves(@PathVariable String username, @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return profileService.getShelves(username, page);
     }
 
-    @PostMapping("/{username}/shelf")
+    @PostMapping("/{username}/shelves")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ShelfDto> postProfileShelves(@PathVariable String username, @RequestBody ShelfDto shelfDto) {
         return profileService.addShelf(username, shelfDto);
