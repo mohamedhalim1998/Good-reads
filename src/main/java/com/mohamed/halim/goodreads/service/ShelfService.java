@@ -1,10 +1,12 @@
 package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.model.Shelf;
+import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ShelfDto;
 import com.mohamed.halim.goodreads.repository.ShelfBookRepository;
 import com.mohamed.halim.goodreads.repository.ShelfRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -17,6 +19,7 @@ import static com.mohamed.halim.goodreads.config.ConfigProperties.PAGE_SIZE;
 public class ShelfService {
     private ShelfRepository shelfRepository;
     private ShelfBookRepository shelfBookRepository;
+    private BookService bookService;
 
     public Flux<ShelfDto> getProfileShelves(String username, int page) {
         Flux<Shelf> shelfFlux = shelfRepository.findByUserId(username, PageRequest.of(page, PAGE_SIZE));
@@ -41,5 +44,11 @@ public class ShelfService {
 
     public Mono<Void> deleteProfileShelf(ShelfDto shelfDto) {
         return shelfRepository.deleteById(shelfDto.getId());
+    }
+
+    public Flux<BookDto> getShelfBooks(Long shelfId, int page) {
+        return shelfBookRepository.findByShelfId(shelfId, PageRequest.of(page, PAGE_SIZE)).flatMap(
+                shelfBook -> bookService.getBook(shelfBook.getBookId())
+        );
     }
 }

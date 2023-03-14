@@ -120,4 +120,8 @@ public class ProfileService {
     public Mono<Void> deleteShelf(String username, ShelfDto shelfDto) {
         return shelfService.deleteProfileShelf(shelfDto);
     }
+
+    public Flux<BookDto> getShelfBooks(Long shelfId, int page) {
+        return shelfService.getShelfBooks(shelfId, page);
+    }
 }

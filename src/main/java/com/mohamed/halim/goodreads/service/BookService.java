@@ -7,6 +7,7 @@ import com.mohamed.halim.goodreads.repository.BookRepository;
 import com.mohamed.halim.goodreads.repository.ProfileBookRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -45,5 +46,9 @@ public class BookService {
 
     public Mono<Void> deleteBook(ProfileBook profileBook) {
         return profileBookRepository.deleteById(profileBook.getId());
+    }
+
+    public Mono<BookDto> getBook(String bookId) {
+        return bookRepository.findByISBN(bookId).map(BookDto::fromBook);
     }
 }
