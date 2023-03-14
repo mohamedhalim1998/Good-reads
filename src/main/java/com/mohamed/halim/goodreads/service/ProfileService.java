@@ -129,4 +129,8 @@ public class ProfileService {
     public Mono<ShelfBook> saveBookToShelf(ShelfBook shelfBook) {
         return shelfService.saveBookToShelf(shelfBook);
     }
+
+    public Mono<Void> deleteBookFromShelf(ShelfBook shelfBook) {
+        return shelfService.deleteBookFromShelf(shelfBook);
+    }
 }

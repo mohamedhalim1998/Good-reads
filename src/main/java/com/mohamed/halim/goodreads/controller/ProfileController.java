@@ -111,5 +111,8 @@ public class ProfileController {
     public Mono<ShelfBook> postProfileShelfBooks(@RequestBody ShelfBook shelfBook) {
         return profileService.saveBookToShelf(shelfBook);
     }
-
+    @DeleteMapping("/{username}/shelves/{shelfId}/books")
+    public Mono<Void> deleteProfileShelfBooks(@RequestBody ShelfBook shelfBook) {
+        return profileService.deleteBookFromShelf(shelfBook);
+    }
 }

@@ -56,4 +56,8 @@ public class ShelfService {
     public Mono<ShelfBook> saveBookToShelf(ShelfBook shelfBook) {
         return shelfBookRepository.save(shelfBook);
     }
+
+    public Mono<Void> deleteBookFromShelf(ShelfBook shelfBook) {
+        return shelfBookRepository.deleteById(shelfBook.getId());
+    }
 }
