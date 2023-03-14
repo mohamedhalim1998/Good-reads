@@ -34,4 +34,8 @@ public class ShelfService {
         shelf.setUserId(username);
         return shelfRepository.save(shelf).map(ShelfDto::fromShelf);
     }
+
+    public Mono<Void> deleteProfileShelves(String username) {
+        return shelfRepository.deleteAllByUserId(username);
+    }
 }

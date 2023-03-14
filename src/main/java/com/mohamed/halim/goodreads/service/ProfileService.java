@@ -100,4 +100,12 @@ public class ProfileService {
     public Mono<ShelfDto> addShelf(String username, ShelfDto profileShelf) {
         return shelfService.saveProfileShelf(username, profileShelf);
     }
+
+    public Mono<Void> deleteProfile(String username) {
+        return profileRepository.deleteByUsername(username)
+                .then(bookListService.deleteProfileLists(username))
+                .then(bookService.deleteProfileLists(username))
+                .then(reviewService.deleteProfileReviews(username))
+                .then(shelfService.deleteProfileShelves(username));
+    }
 }

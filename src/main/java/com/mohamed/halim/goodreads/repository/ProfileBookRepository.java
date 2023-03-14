@@ -5,8 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface ProfileBookRepository extends R2dbcRepository<ProfileBook, Long> {
     Flux<ProfileBook> findByUserId(String username, Pageable pageable);
+
+    Mono<Void> deleteAllByUserId(String username);
 }

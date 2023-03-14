@@ -39,4 +39,8 @@ public class BookListService {
         profileBookList.setUserId(username);
         return profileBookListRepository.save(profileBookList);
     }
+
+    public Mono<Void> deleteProfileLists(String username) {
+        return profileBookListRepository.deleteAllByUserId(username);
+    }
 }

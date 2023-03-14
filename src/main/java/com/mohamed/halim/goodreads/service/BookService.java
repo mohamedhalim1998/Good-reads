@@ -38,4 +38,8 @@ public class BookService {
         profileBook.setUserId(username);
         return profileBookRepository.save(profileBook);
     }
+
+    public Mono<Void> deleteProfileLists(String username) {
+        return profileBookRepository.deleteAllByUserId(username);
+    }
 }

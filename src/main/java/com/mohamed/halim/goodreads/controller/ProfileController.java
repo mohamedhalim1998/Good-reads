@@ -38,6 +38,11 @@ public class ProfileController {
         return profileService.getProfile(username);
     }
 
+    @DeleteMapping("/{username}")
+    public Mono<Void> deleteProfileInfo(@PathVariable String username) {
+         return profileService.deleteProfile(username);
+    }
+
     @PostMapping(value = "/{username}")
     public Mono<ProfileDto> postProfileInfo(@PathVariable String username,
                                             @RequestPart("profile") ProfileDto dto,

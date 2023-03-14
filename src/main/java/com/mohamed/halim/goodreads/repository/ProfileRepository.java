@@ -8,4 +8,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ProfileRepository extends R2dbcRepository<Profile, String> {
     Mono<Profile> findByUsername(String username);
+    Mono<Void> deleteByUsername(String username);
 }

@@ -2,7 +2,6 @@ package com.mohamed.halim.goodreads.service;
 
 
 import com.mohamed.halim.goodreads.model.Book;
-import com.mohamed.halim.goodreads.model.Profile;
 import com.mohamed.halim.goodreads.model.Review;
 import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ProfileDto;
@@ -67,4 +66,7 @@ public class ReviewService {
     }
 
 
+    public Mono<Void> deleteProfileReviews(String username) {
+        return reviewRepository.deleteAllByUserId(username);
+    }
 }

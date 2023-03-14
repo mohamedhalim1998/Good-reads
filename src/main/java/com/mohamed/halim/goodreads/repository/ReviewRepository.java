@@ -6,10 +6,13 @@ import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 
 public interface ReviewRepository extends R2dbcRepository<Review, Long> {
 
     Flux<Review> findReviewsByUserId(@Param("username") String username, Pageable pageable);
+
+    Mono<Void> deleteAllByUserId(String username);
 }
