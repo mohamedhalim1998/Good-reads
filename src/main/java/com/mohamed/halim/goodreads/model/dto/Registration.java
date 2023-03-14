@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 
+import static com.mohamed.halim.goodreads.config.ConfigProperties.DEFAULT_PROFILE_PIC;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +27,13 @@ public class Registration {
     private String password;
 
     public static Profile toProfile(Registration registration) {
-        return Profile.builder().username(registration.username).email(registration.email).password(registration.password).build();
+        return Profile.builder()
+                .username(registration.username)
+                .fullName(registration.username)
+                .email(registration.email)
+                .password(registration.password)
+                .profilePic(DEFAULT_PROFILE_PIC)
+                .build();
     }
 
 }
