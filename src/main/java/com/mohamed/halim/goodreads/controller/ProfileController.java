@@ -59,6 +59,10 @@ public class ProfileController {
     public Mono<ProfileBook> postProfileBook(@PathVariable String username, @RequestBody ProfileBook profileBook) {
         return profileService.addBook(username, profileBook);
     }
+    @DeleteMapping("/{username}/books")
+    public Mono<Void> deleteProfileBook(@PathVariable String username, @RequestBody ProfileBook profileBook) {
+        return profileService.deleteBook(profileBook);
+    }
     @GetMapping("/{username}/lists")
     public Flux<ListDto> getProfileLists(@PathVariable String username,  @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         return profileService.getLists(username, page);

@@ -42,4 +42,8 @@ public class BookService {
     public Mono<Void> deleteProfileLists(String username) {
         return profileBookRepository.deleteAllByUserId(username);
     }
+
+    public Mono<Void> deleteBook(ProfileBook profileBook) {
+        return profileBookRepository.deleteById(profileBook.getId());
+    }
 }

@@ -108,4 +108,8 @@ public class ProfileService {
                 .then(reviewService.deleteProfileReviews(username))
                 .then(shelfService.deleteProfileShelves(username));
     }
+
+    public Mono<Void> deleteBook(ProfileBook profileBook) {
+        return bookService.deleteBook(profileBook);
+    }
 }
