@@ -1,7 +1,6 @@
 package com.mohamed.halim.goodreads.model.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mohamed.halim.goodreads.model.Profile;
 import lombok.AllArgsConstructor;
