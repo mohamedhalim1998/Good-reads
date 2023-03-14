@@ -117,5 +117,7 @@ public class ProfileService {
         return bookListService.deleteProfileList(profileBookList);
     }
 
-
+    public Mono<Void> deleteShelf(String username, ShelfDto shelfDto) {
+        return shelfService.deleteProfileShelf(shelfDto);
+    }
 }

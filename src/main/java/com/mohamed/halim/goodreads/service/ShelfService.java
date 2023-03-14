@@ -38,4 +38,8 @@ public class ShelfService {
     public Mono<Void> deleteProfileShelves(String username) {
         return shelfRepository.deleteAllByUserId(username);
     }
+
+    public Mono<Void> deleteProfileShelf(ShelfDto shelfDto) {
+        return shelfRepository.deleteById(shelfDto.getId());
+    }
 }

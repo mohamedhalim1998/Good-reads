@@ -88,5 +88,9 @@ public class ProfileController {
     public Mono<ShelfDto> postProfileShelves(@PathVariable String username, @RequestBody ShelfDto shelfDto) {
         return profileService.addShelf(username, shelfDto);
     }
+    @DeleteMapping("/{username}/shelves")
+    public Mono<Void> deleteProfileShelves(@PathVariable String username, @RequestBody ShelfDto shelfDto) {
+        return profileService.deleteShelf(username, shelfDto);
+    }
 
 }
