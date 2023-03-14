@@ -112,4 +112,10 @@ public class ProfileService {
     public Mono<Void> deleteBook(ProfileBook profileBook) {
         return bookService.deleteBook(profileBook);
     }
+
+    public Mono<Void> deleteList(ProfileBookList profileBookList) {
+        return bookListService.deleteProfileList(profileBookList);
+    }
+
+
 }

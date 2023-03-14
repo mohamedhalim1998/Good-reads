@@ -73,6 +73,10 @@ public class ProfileController {
     public Mono<ProfileBookList> postProfileList(@PathVariable String username, @RequestBody ProfileBookList profileBookList) {
         return profileService.addList(username, profileBookList);
     }
+    @DeleteMapping("/{username}/lists")
+    public Mono<Void> deleteProfileList(@PathVariable String username, @RequestBody ProfileBookList profileBookList) {
+        return profileService.deleteList(profileBookList);
+    }
 
     @GetMapping("/{username}/shelves")
     public Flux<ShelfDto> getProfileShelves(@PathVariable String username, @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
