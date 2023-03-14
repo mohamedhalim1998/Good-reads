@@ -6,6 +6,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +26,9 @@ public class ImageService {
         return file.getName();
     }
 
-    public Resource loadImage(String name) throws FileNotFoundException {
+    public Mono<Resource> loadImage(String name) throws FileNotFoundException {
         File file = new File("img" , name);
-        return new InputStreamResource(new FileInputStream(file));
+        return Mono.just(new InputStreamResource(new FileInputStream(file)));
     }
 
 }
