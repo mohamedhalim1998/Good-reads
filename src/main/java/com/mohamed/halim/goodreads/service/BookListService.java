@@ -2,6 +2,7 @@ package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.model.BookList;
 import com.mohamed.halim.goodreads.model.dto.ListDto;
+import com.mohamed.halim.goodreads.model.joins.BookListBook;
 import com.mohamed.halim.goodreads.model.joins.ProfileBookList;
 import com.mohamed.halim.goodreads.repository.BookListRepository;
 import com.mohamed.halim.goodreads.repository.ListBookRepository;
@@ -32,7 +33,7 @@ public class BookListService {
                     tuple.getT1().setBookCount(tuple.getT2().intValue());
                     return tuple.getT1();
                 })
-        ;
+                ;
     }
 
     public Mono<ProfileBookList> addProfileList(String username, ProfileBookList profileBookList) {
@@ -45,6 +46,24 @@ public class BookListService {
     }
 
     public Mono<Void> deleteProfileList(ProfileBookList profileBookList) {
-        return bookListRepository.deleteById(profileBookList.getId());
+        return profileBookListRepository.deleteById(profileBookList.getId());
+    }
+
+    public Flux<ListDto> getBookLists(String isbn, int page) {
+        Flux<BookList> bookListFlux = listBookRepository.findByBookId(isbn, PageRequest.of(page, PAGE_SIZE))
+                .flatMap(profileBookList -> bookListRepository.findById(profileBookList.getListId()));
+        Flux<Long> bookCount = bookListFlux.flatMap(bookList -> listBookRepository.findByListId(bookList.getId()).count());
+        return bookListFlux
+                .map(ListDto::fromList)
+                .zipWith(bookCount)
+                .map(tuple -> {
+                    tuple.getT1().setBookCount(tuple.getT2().intValue());
+                    return tuple.getT1();
+                })
+                ;
+    }
+
+    public Mono<BookListBook> addBookList(BookListBook listBook) {
+        return listBookRepository.save(listBook);
     }
 }

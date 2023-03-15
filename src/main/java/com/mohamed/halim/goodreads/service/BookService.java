@@ -1,11 +1,9 @@
 package com.mohamed.halim.goodreads.service;
 
 import com.mohamed.halim.goodreads.model.Book;
-import com.mohamed.halim.goodreads.model.dto.AuthorDto;
-import com.mohamed.halim.goodreads.model.dto.BookDto;
-import com.mohamed.halim.goodreads.model.dto.PublisherDto;
-import com.mohamed.halim.goodreads.model.dto.ReviewDto;
+import com.mohamed.halim.goodreads.model.dto.*;
 import com.mohamed.halim.goodreads.model.joins.BookAuthor;
+import com.mohamed.halim.goodreads.model.joins.BookListBook;
 import com.mohamed.halim.goodreads.model.joins.ProfileBook;
 import com.mohamed.halim.goodreads.repository.BookAuthorRepository;
 import com.mohamed.halim.goodreads.repository.BookRepository;
@@ -31,6 +29,7 @@ public class BookService {
     private BookAuthorRepository bookAuthorRepository;
     private PublisherService publisherService;
     private AuthorService authorService;
+    private BookListService bookListService;
 
     public Mono<ReviewDto> saveBookReview(ReviewDto reviewDto, String ISBN) {
         reviewDto.setBookId(ISBN);
@@ -92,5 +91,13 @@ public class BookService {
 
     public Flux<ReviewDto> getBookReviews(String isbn, int page) {
         return reviewService.findBookReviews(isbn, page);
+    }
+
+    public Flux<ListDto> getBookLists(String isbn, int page) {
+        return bookListService.getBookLists(isbn, page);
+    }
+
+    public Mono<BookListBook> saveBookList(BookListBook listBook) {
+        return bookListService.addBookList(listBook);
     }
 }
