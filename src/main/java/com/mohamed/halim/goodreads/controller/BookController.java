@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 public class BookController {
     private final BookService bookService;
 
-    @GetMapping("{isbn}/reviews")
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
