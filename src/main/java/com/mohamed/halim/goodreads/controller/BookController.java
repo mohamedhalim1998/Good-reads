@@ -27,4 +27,10 @@ public class BookController {
     public Mono<BookDto> postBook(@RequestBody BookDto dto) {
         return bookService.saveBook(dto);
     }
+
+    @GetMapping("{isbn}")
+    public Mono<BookDto> postBook(@PathVariable String isbn) {
+        return bookService.getBook(isbn);
+    }
+
 }
