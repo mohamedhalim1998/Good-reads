@@ -21,7 +21,7 @@ import static com.mohamed.halim.goodreads.config.ConfigProperties.hostname;
 public class BookDto {
     private String ISBN;
     private String name;
-    private String avgRating;
+    private double avgRating;
     private String subName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Long> authorIds;

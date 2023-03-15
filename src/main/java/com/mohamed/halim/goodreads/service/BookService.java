@@ -63,6 +63,7 @@ public class BookService {
                 .flatMap(bookAuthor -> authorService.getAuthor(bookAuthor.getAuthorId()))
                 .collectList();
         Mono<PublisherDto> publisherDtoMono = bookMono.flatMap(book -> publisherService.getPublisher(book.getPublisherId()));
+        Mono<Double> avgRate =reviewService.findBookAvgRate(bookId);
         return bookMono.map(BookDto::fromBook)
                 .zipWith(authorsDtoFlux)
                 .map(tuple -> {
@@ -72,7 +73,12 @@ public class BookService {
                 .map(tuple -> {
                     tuple.getT1().setPublisherDto(tuple.getT2());
                     return tuple.getT1();
-                });
+                }).zipWith(avgRate)
+                .map(tuple -> {
+                    tuple.getT1().setAvgRating(tuple.getT2());
+                    return tuple.getT1();
+                })
+                ;
     }
 
     public Mono<BookDto> saveBook(BookDto dto) {

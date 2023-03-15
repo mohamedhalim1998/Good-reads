@@ -37,7 +37,7 @@ public class ReviewService {
             for (var constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-           return  Mono.error(new ConstraintViolationException("Error occurred: " + sb, violations));
+            return Mono.error(new ConstraintViolationException("Error occurred: " + sb, violations));
         }
 
         Review review = ReviewDto.toReview(reviewDto);
@@ -68,5 +68,11 @@ public class ReviewService {
 
     public Mono<Void> deleteProfileReviews(String username) {
         return reviewRepository.deleteAllByUserId(username);
+    }
+
+    public Mono<Double> findBookAvgRate(String bookId) {
+        return reviewRepository.findByBookId(bookId).map(Review::getRate).reduce(0.0, Double::sum)
+                .zipWith(reviewRepository.countByBookId(bookId))
+                .map(tuple -> tuple.getT1() / tuple.getT2());
     }
 }
