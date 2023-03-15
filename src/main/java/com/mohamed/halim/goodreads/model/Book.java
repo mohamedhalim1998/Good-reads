@@ -17,8 +17,7 @@ public class Book {
     private String ISBN;
     private String name;
     private String subName;
-    private double avgRating;
-    private Long seriesId;
-    private String language;
     private Long publisherId;
+    private String bookCover;
+
 }

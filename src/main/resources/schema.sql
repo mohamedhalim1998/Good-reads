@@ -1,5 +1,5 @@
 create table author (id bigint auto_increment not null, bio varchar(255), birthdate timestamp(6), name varchar(255), website varchar(255), primary key (id));
-create table book (isbn varchar(255) not null, avg_rating float(53) not null, name varchar(255), publisher_id bigint, series_id bigint, sub_name varchar(255), primary key (isbn));
+create table book (isbn varchar(255) not null, book_cover varchar(255), name varchar(255), publisher_id bigint, sub_name varchar(255), primary key (isbn));
 create table book_author (id bigint auto_increment not null, author_id bigint, book_id varchar(255), primary key (id));
 create table book_genre (id bigint auto_increment not null, book_id varchar(255), genre varchar(255), primary key (id));
 create table book_list (id bigint auto_increment not null, name varchar(255), primary key (id));

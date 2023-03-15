@@ -1,5 +1,7 @@
 package com.mohamed.halim.goodreads.controller;
 
+import com.mohamed.halim.goodreads.model.Book;
+import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ReviewDto;
 import com.mohamed.halim.goodreads.service.BookService;
 import com.mohamed.halim.goodreads.service.ReviewService;
@@ -18,5 +20,11 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ReviewDto> postReview(@RequestBody ReviewDto reviewDto, @PathVariable("isbn") String ISBN) {
         return bookService.saveBookReview(reviewDto, ISBN);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<BookDto> postBook(@RequestBody BookDto dto) {
+        return bookService.saveBook(dto);
     }
 }
