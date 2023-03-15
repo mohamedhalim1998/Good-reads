@@ -52,7 +52,7 @@ public class BookService {
         return profileBookRepository.deleteAllByUserId(username);
     }
 
-    public Mono<Void> deleteBook(ProfileBook profileBook) {
+    public Mono<Void> deleteProfileBook(ProfileBook profileBook) {
         return profileBookRepository.deleteById(profileBook.getId());
     }
 
@@ -99,5 +99,15 @@ public class BookService {
 
     public Mono<BookListBook> saveBookList(BookListBook listBook) {
         return bookListService.addBookList(listBook);
+    }
+
+    public Mono<Void> deleteBook(String bookId) {
+
+
+        Mono<Double> avgRate =reviewService.findBookAvgRate(bookId);
+        return   bookRepository.deleteById(bookId)
+                .then(bookAuthorRepository.deleteByBookId(bookId))
+                .then(reviewService.deleteBookReviews(bookId))
+                .then(bookListService.deleteBookLists(bookId));
     }
 }

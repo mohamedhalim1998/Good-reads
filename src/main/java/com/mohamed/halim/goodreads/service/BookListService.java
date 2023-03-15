@@ -66,4 +66,8 @@ public class BookListService {
     public Mono<BookListBook> addBookList(BookListBook listBook) {
         return listBookRepository.save(listBook);
     }
+
+    public Mono<Void> deleteBookLists(String bookId) {
+        return listBookRepository.deleteByBookId(bookId);
+    }
 }

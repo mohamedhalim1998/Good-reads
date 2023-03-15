@@ -88,4 +88,8 @@ public class ReviewService {
                 }
         );
     }
+
+    public Mono<Void> deleteBookReviews(String bookId) {
+        return reviewRepository.deleteAllByBookId(bookId);
+    }
 }

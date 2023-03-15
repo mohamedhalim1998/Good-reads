@@ -30,6 +30,11 @@ public class BookController {
         return bookService.getBook(isbn);
     }
 
+    @DeleteMapping("{isbn}")
+    public Mono<Void> deleteBook(@PathVariable String isbn) {
+        return bookService.deleteBook(isbn);
+    }
+
     @GetMapping("{isbn}/reviews")
     public Flux<ReviewDto> getBookReviews(@PathVariable String isbn,
                                           @RequestParam(value = "page", required = false, defaultValue = "0") int page) {

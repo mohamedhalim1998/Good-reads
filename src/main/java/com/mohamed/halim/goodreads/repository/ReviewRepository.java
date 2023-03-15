@@ -20,4 +20,7 @@ public interface ReviewRepository extends R2dbcRepository<Review, Long> {
     Flux<Review> findByBookId(String bookId, Pageable pageable);
 
     Mono<Long> countByBookId(String bookIsd);
+
+    Mono<Void> deleteAllByBookId(String bookId);
+
 }
