@@ -89,4 +89,8 @@ public class BookService {
                 .then(bookRepository.save(BookDto.toBook(dto)))
                 .flatMap(book -> getBook(book.getISBN()));
     }
+
+    public Flux<ReviewDto> getBookReviews(String isbn, int page) {
+        return reviewService.findBookReviews(isbn, page);
+    }
 }

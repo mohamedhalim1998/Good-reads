@@ -2,6 +2,7 @@ package com.mohamed.halim.goodreads.service;
 
 
 import com.mohamed.halim.goodreads.model.Book;
+import com.mohamed.halim.goodreads.model.Profile;
 import com.mohamed.halim.goodreads.model.Review;
 import com.mohamed.halim.goodreads.model.dto.BookDto;
 import com.mohamed.halim.goodreads.model.dto.ProfileDto;
@@ -20,6 +21,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
+
+import static com.mohamed.halim.goodreads.config.ConfigProperties.PAGE_SIZE;
 
 @Service
 @AllArgsConstructor
@@ -56,7 +59,7 @@ public class ReviewService {
     }
 
     public Flux<ReviewDto> findUserReviews(String username, int page) {
-        Flux<Review> reviewFlux = reviewRepository.findReviewsByUserId(username, PageRequest.of(1, 20)).doOnError(e -> log.error("error from review flux"));
+        Flux<Review> reviewFlux = reviewRepository.findReviewsByUserId(username, PageRequest.of(page, PAGE_SIZE)).doOnError(e -> log.error("error from review flux"));
         Flux<Book> bookFlux = reviewFlux.flatMap(review -> bookRepository.findByISBN(review.getBookId())).doOnError(e -> log.error(e.getMessage() + "error from book flux"));
         return Flux.zip(reviewFlux, bookFlux, (review, book) -> {
             ReviewDto reviewDto = ReviewDto.fromReview(review);
@@ -74,5 +77,15 @@ public class ReviewService {
         return reviewRepository.findByBookId(bookId).map(Review::getRate).reduce(0.0, Double::sum)
                 .zipWith(reviewRepository.countByBookId(bookId))
                 .map(tuple -> tuple.getT1() / tuple.getT2());
+    }
+
+    public Flux<ReviewDto> findBookReviews(String isbn, int page) {
+        Flux<Review> reviewFlux = reviewRepository.findByBookId(isbn, PageRequest.of(page, PAGE_SIZE));
+        Flux<ProfileDto> profiles = reviewFlux.flatMap(review -> profileRepository.findByUsername(review.getUserId())).map(ProfileDto::fromProfile);
+        return reviewFlux.map(ReviewDto::fromReview).zipWith(profiles).map(tuple -> {
+                    tuple.getT1().setProfileDto(tuple.getT2());
+                    return tuple.getT1();
+                }
+        );
     }
 }
