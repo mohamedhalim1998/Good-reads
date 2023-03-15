@@ -13,6 +13,6 @@ public class AuthorService {
     private AuthorRepository authorRepository;
 
     public Mono<AuthorDto> getAuthor(Long authorId) {
-        return authorRepository.findById(authorId).map(AuthorDto::fromAuthor);
+        return authorRepository.findById(authorId).map(AuthorDto::fromAuthor).switchIfEmpty(Mono.error(new IllegalArgumentException()));
     }
 }

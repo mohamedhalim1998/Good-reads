@@ -62,7 +62,7 @@ public class BookService {
                 .flatMap(bookAuthor -> authorService.getAuthor(bookAuthor.getAuthorId()))
                 .collectList();
         Mono<PublisherDto> publisherDtoMono = bookMono.flatMap(book -> publisherService.getPublisher(book.getPublisherId()));
-        Mono<Double> avgRate =reviewService.findBookAvgRate(bookId);
+        Mono<Double> avgRate = reviewService.findBookAvgRate(bookId);
         return bookMono.map(BookDto::fromBook)
                 .zipWith(authorsDtoFlux)
                 .map(tuple -> {
@@ -82,8 +82,10 @@ public class BookService {
 
     public Mono<BookDto> saveBook(BookDto dto) {
 
-        return Flux.fromIterable(dto.getAuthorIds())
-                .map(id -> BookAuthor.builder().authorId(id).bookId(dto.getISBN()).build())
+        return publisherService.getPublisher(dto.getPublisherId())
+                .thenMany(Flux.fromIterable(dto.getAuthorIds()))
+                .flatMap(id -> authorService.getAuthor(id))
+                .map(author -> BookAuthor.builder().authorId(author.getId()).bookId(dto.getISBN()).build())
                 .flatMap(authorBook -> bookAuthorRepository.save(authorBook))
                 .then(bookRepository.save(BookDto.toBook(dto)))
                 .flatMap(book -> getBook(book.getISBN()));
@@ -104,8 +106,8 @@ public class BookService {
     public Mono<Void> deleteBook(String bookId) {
 
 
-        Mono<Double> avgRate =reviewService.findBookAvgRate(bookId);
-        return   bookRepository.deleteById(bookId)
+        Mono<Double> avgRate = reviewService.findBookAvgRate(bookId);
+        return bookRepository.deleteById(bookId)
                 .then(bookAuthorRepository.deleteByBookId(bookId))
                 .then(reviewService.deleteBookReviews(bookId))
                 .then(bookListService.deleteBookLists(bookId));

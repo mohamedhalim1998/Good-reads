@@ -14,7 +14,7 @@ public class ExceptionHandlerImpl  extends ResponseEntityExceptionHandler {
     @ResponseStatus(
             value = HttpStatus.BAD_REQUEST,
             reason = "No Such User Found")
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, AuthorNoFoundException.class, AuthorNoFoundException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

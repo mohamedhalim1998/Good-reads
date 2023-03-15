@@ -1,5 +1,6 @@
 package com.mohamed.halim.goodreads.service;
 
+import com.mohamed.halim.goodreads.Exception.PublisherNotFoundException;
 import com.mohamed.halim.goodreads.model.dto.PublisherDto;
 import com.mohamed.halim.goodreads.repository.PublisherRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,6 @@ import reactor.core.publisher.Mono;
 public class PublisherService {
     private PublisherRepository publisherRepository;
     public Mono<PublisherDto> getPublisher(Long publisherId) {
-        return publisherRepository.findById(publisherId).map(PublisherDto::fromPublisher);
+        return publisherRepository.findById(publisherId).map(PublisherDto::fromPublisher).switchIfEmpty(Mono.error(new PublisherNotFoundException()));
     }
 }
